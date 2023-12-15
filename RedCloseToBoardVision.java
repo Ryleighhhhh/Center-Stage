@@ -20,12 +20,13 @@ public class RedCloseToBoardVision extends LinearOpMode {
     private DcMotor bL = null;
     private DcMotor bR = null;
     /*private DcMotor VP = null;
-    private DcMotor VP2 = null;
+    private DcMotor VP2 = null;*/
     private DcMotor elbow = null;
-    //private Servo droneservo = null;
+    private DcMotor elbow2 = null;
+    private Servo droneservo = null;
     private Servo clawL = null;
     private Servo clawR = null;
-    private Servo wrist = null;*/
+    private Servo wrist = null;
     OpenCvCamera webcam;
     VisionPipelineRed pipeline = new VisionPipelineRed(telemetry);
     private ElapsedTime runtime = new ElapsedTime();
@@ -39,10 +40,10 @@ public class RedCloseToBoardVision extends LinearOpMode {
     double arc90 = Math.PI * diameter / 2;
     double arc180 = Math.PI * diameter;
 
-    /*double armMove(double deg, int timeout) {
+    double armMove(double deg, int timeout) {
         int goal = (int) (deg * COUNTS_PER_MOTOR_REV / deg);
         return deg;
-    }*/
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -52,12 +53,13 @@ public class RedCloseToBoardVision extends LinearOpMode {
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
         /*VP = hardwareMap.get(DcMotor.class, "VP"); //left-rev
-        VP2 = hardwareMap.get(DcMotor.class, "VP2"); //right
+        VP2 = hardwareMap.get(DcMotor.class, "VP2"); //right */
         elbow = hardwareMap.get(DcMotor.class, "elbow");
+        elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         clawL = hardwareMap.get(Servo.class, "clawL"); //rev
         clawR = hardwareMap.get(Servo.class, "clawR");
-        wrist = hardwareMap.get(Servo.class, "wrist");*/
-        //droneservo = hardwareMap.get(Servo.class, "droneservo");
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        droneservo = hardwareMap.get(Servo.class, "droneservo");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -102,25 +104,33 @@ public class RedCloseToBoardVision extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        fL.setDirection(DcMotor.Direction.FORWARD);
-        fR.setDirection(DcMotor.Direction.REVERSE);
-        bL.setDirection(DcMotor.Direction.FORWARD);
-        bR.setDirection(DcMotor.Direction.REVERSE);
+        fL.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.FORWARD);
+        elbow.setDirection(DcMotorSimple.Direction.REVERSE);
+        elbow2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbow2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.setMsTransmissionInterval(20);
 
@@ -144,43 +154,57 @@ public class RedCloseToBoardVision extends LinearOpMode {
 
         switch (pipeline.getAnalysis()) {
             case LEFT:
-                //clawL.setPosition(0);
-                //clawR.setPosition(0.4);
-                encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //strafes right 28 inches
-                encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns towards team prop
-                //clawL.setPosition(0.4); //lets go of purple pixel on the marker
-                encoderDrive(DRIVE_SPEED, 37, 37, 37, 37, 1.0); //move towards the board
-                encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 1.0); //move towards the board
-                /*elbowDrive(DRIVE_SPEED, armMove(75, 1), 1.0); //move arm 75 degrees to score
+                clawL.setPosition(0.4);
                 clawR.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(-15, 1), 1.0); //arm moves back */
+                encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //strafes right 28 inches
+                encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns RIGHT towards team prop
+                encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //strafes right 28 inches
+                elbowDrive(DRIVE_SPEED, armMove(-75, 1), 1.0); //arm moves forward
+                clawL.setPosition(0); //lets go of purple pixel on the marker
+                elbowDrive(DRIVE_SPEED, armMove(75, 1), 1.0); //arm moves forward
+                encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //turns towards team prop
+                encoderDrive(DRIVE_SPEED, -27, -27, -27, -27, 1.0); //move towards the board
+                encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 1.0); //move towards the board
+                elbowDrive(DRIVE_SPEED, armMove(-75, 1), 1.0); //arm moves back
+                clawR.setPosition(0.4);
+                elbowDrive(DRIVE_SPEED, armMove(15, 1), 1.0); //score
                 encoderDrive(DRIVE_SPEED, -12, 12, 12, -12, 1.0); //strafes right 12 inches
                 break;
             case CENTER:
-                //clawL.setPosition(0);
-                //clawR.setPosition(0.4);
-                encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //strafes right 28 inches
-                encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //turns towards team prop
-                //clawL.setPosition(0.4); //lets go of purple pixel on the marker
-                encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns towards board
-                encoderDrive(DRIVE_SPEED, 37, 37, 37, 37, 1.0); //move towards the board
-                /*elbowDrive(DRIVE_SPEED, armMove(75, 1), 1.0); //move arm 75 degrees to score
+                clawL.setPosition(0.4);
                 clawR.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(-15, 1), 1.0); //arm moves back*/
-                encoderDrive(DRIVE_SPEED, -17, 17, 17, -17, 1.0); //strafes right 12 inches
+                encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 1.0); //strafes right 28 inches
+                encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //turns towards team prop
+                clawL.setPosition(0.4);
+                clawR.setPosition(0);
+                elbowDrive(DRIVE_SPEED, armMove(-60, 1), 1.0); //arm moves forward
+                clawL.setPosition(0); //lets go of purple pixel on the marker
+                clawR.setPosition(0);
+                elbowDrive(DRIVE_SPEED, armMove(85, 1), 1.0); //arm moves forward
+                encoderDrive(DRIVE_SPEED, -5, -5, -5, -5, 1.0); //strafes right 28 inches
+                clawR.setPosition(0);
+                encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns towards board
+                encoderDrive(DRIVE_SPEED, -37, -37, -37, -37, 1.0); //move towards the board
+                clawR.setPosition(0);
+                elbowDrive(DRIVE_SPEED, armMove(-20, 1), 1.0); //arm moves back
+                clawR.setPosition(0.4);
+                elbowDrive(DRIVE_SPEED, armMove(40, 1), 1.0); //score
+                encoderDrive(DRIVE_SPEED, 17, -17, -17, 17, 1.0); //strafes right 12 inches
                 break;
             case RIGHT:
-                //clawL.setPosition(0);
-                //clawR.setPosition(0.4);
-                encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //strafes right 28 inches
-                encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns towards team prop
-                //clawL.setPosition(0.4); //lets go of purple pixel on the marker
-                encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //turns towards team prop
-                encoderDrive(DRIVE_SPEED, 37, 37, 37, 37, 1.0); //move towards the board
-                encoderDrive(DRIVE_SPEED, 10, -10, -10, 10, 1.0); //move towards the board
-                /*elbowDrive(DRIVE_SPEED, armMove(75, 1), 1.0); //move arm 75 degrees to score
+                clawL.setPosition(0.4);
                 clawR.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(-15, 1), 1.0); //arm moves back*/
+                encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //strafes right 28 inches
+                encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns towards team prop
+                encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //strafes right 28 inches
+                elbowDrive(DRIVE_SPEED, armMove(-75, 1), 1.0); //arm moves forward
+                clawL.setPosition(0); //lets go of purple pixel on the marker
+                elbowDrive(DRIVE_SPEED, armMove(75, 1), 1.0); //arm moves forward
+                encoderDrive(DRIVE_SPEED, -47, -47, -47, -47, 1.0); //move towards the board
+                encoderDrive(DRIVE_SPEED, 10, -10, -10, 10, 1.0); //move towards the board
+                elbowDrive(DRIVE_SPEED, armMove(-75, 1), 1.0); //arm moves back
+                clawR.setPosition(0.4);
+                elbowDrive(DRIVE_SPEED, armMove(15, 1), 1.0); //score
                 encoderDrive(DRIVE_SPEED, -27, 27, 27, -27, 1.0); //strafes right 12 inches
                 break;
         }
@@ -276,22 +300,25 @@ public class RedCloseToBoardVision extends LinearOpMode {
         }
     }
 
-    /*public void elbowDrive(double speed, double elbowInches, double timeoutS) {
+    public void elbowDrive(double speed, double elbowInches, double timeoutS) {
         int newelbowtarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newelbowtarget = elbow.getCurrentPosition() + (int) (elbowInches * COUNTS_PER_INCH);
+            newelbowtarget = elbow.getCurrentPosition() + elbow2.getCurrentPosition() + (int) (elbowInches * COUNTS_PER_INCH);
             elbow.setTargetPosition(newelbowtarget);
+            elbow2.setTargetPosition(newelbowtarget);
 
             // Turn On RUN_TO_POSITION
             elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            elbow2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             elbow.setPower(Math.abs(speed));
+            elbow2.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -301,22 +328,23 @@ public class RedCloseToBoardVision extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (elbow.isBusy())) {
+                    (elbow.isBusy() && elbow2.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Running to", "%7d", newelbowtarget);
-                telemetry.addData("Currently at", "at %7d",
-                        elbow.getCurrentPosition());
+                telemetry.addData("Currently at", "at %7d ",
+                        elbow.getCurrentPosition(), elbow2.getCurrentPosition());
                 telemetry.update();
             }
 
             elbow.setPower(0);
+            elbow2.setPower(0);
 
             // Turn off RUN_TO_POSITION
             elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            elbow2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
-
         }
-    } */
+    }
 }
