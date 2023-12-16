@@ -156,6 +156,7 @@ public class RedCloseToBoardVision extends LinearOpMode {
         switch (pipeline.getAnalysis()) {
             case LEFT:
                 //pixelHold();
+                encoderDrive(DRIVE_SPEED, 2, -2, -2, 2, 1.0); //strafes right from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns RIGHT
                 //clawL.setPosition(0.4);
@@ -184,6 +185,7 @@ public class RedCloseToBoardVision extends LinearOpMode {
                 //pixelHold();
                 clawL.setPosition(0.4);
                 clawR.setPosition(0);
+                encoderDrive(DRIVE_SPEED, 2, -2, -2, 2, 1.0); //strafes right from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 1.0); //move forward
                 //clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //forward to back
@@ -212,6 +214,7 @@ public class RedCloseToBoardVision extends LinearOpMode {
                 break;
             case RIGHT:
                 //pixelHold();
+                encoderDrive(DRIVE_SPEED, 2, -2, -2, 2, 1.0); //strafes right from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns left
                 //clawL.setPosition(0.4);

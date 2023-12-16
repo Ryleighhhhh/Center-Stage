@@ -157,6 +157,7 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 //pixelHold();
                 //clawL.setPosition(0.4); //rest
                 //clawR.setPosition(0); //rest
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns right
                 encoderDrive(DRIVE_SPEED, 7.5, 7.5, 7.5, 7.5, 1.0); //forward for room for claw
@@ -184,6 +185,7 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 //pixelHold();
                 //clawL.setPosition(0.4);
                 //clawR.setPosition(0);
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 1.0); //move forward
                 //clawL.setPosition(0.4);
                 //clawR.setPosition(0);
@@ -216,6 +218,7 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 //pixelHold();
                 //clawL.setPosition(0.4); //rest
                 //clawR.setPosition(0); //rest
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 //clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns LEFT
