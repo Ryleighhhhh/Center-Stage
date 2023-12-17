@@ -102,25 +102,35 @@ public class BlueCloseToBoardVision extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        fL.setDirection(DcMotor.Direction.FORWARD);
-        fR.setDirection(DcMotor.Direction.REVERSE);
-        bL.setDirection(DcMotor.Direction.FORWARD);
-        bR.setDirection(DcMotor.Direction.REVERSE);
+        fL.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.FORWARD);
+        elbow.setDirection(DcMotorSimple.Direction.REVERSE);
+        elbow2.setDirection(DcMotorSimple.Direction.FORWARD);
+        clawL.setPosition(0.4);
+        clawR.setPosition(0);
 
         fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elbow2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elbow2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.setMsTransmissionInterval(20);
 
@@ -144,83 +154,53 @@ public class BlueCloseToBoardVision extends LinearOpMode {
 
         switch (pipeline.getAnalysis()) {
             case LEFT:
-                clawL.setPosition(0.4); //rest
-                clawR.setPosition(0); //rest
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns right
-                encoderDrive(DRIVE_SPEED, 7.5, 7.5, 7.5, 7.5, 1.0); //forward for room for claw
-                clawL.setPosition(0.4); //rest
-                clawR.setPosition(0); //rest
-                elbowDrive(DRIVE_SPEED, armMove(-70, 1), 1.0); //arm moves back
-                clawL.setPosition(0); //lets go of purple pixel on the marker
-                clawR.setPosition(0); //rest
-                elbowDrive(DRIVE_SPEED, armMove(85, 1), 1.0); //arm moves forward
-                encoderDrive(DRIVE_SPEED, -7.5, -7.5, -7.5, -7.5, 1.0); //backward to go back
-                encoderDrive(DRIVE_SPEED, 15, -15, -15, 15, 1.0); //strafes left from back
-                clawR.setPosition(0); //rest
-                encoderDrive(DRIVE_SPEED, -30, -30, -30, -30, 1.0); //move towards the board
-                encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //move towards the board
-                clawR.setPosition(0); //rest
-                elbowDrive(DRIVE_SPEED, armMove(-25, 1), 1.0); //arm moves back
-                clawR.setPosition(0.4); //score
-                elbowDrive(DRIVE_SPEED, armMove(40, 1), 1.0); //score
+                encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //forward for room for claw
+                elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves back
+                clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves forward
+                encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //backward to go back
+                encoderDrive(DRIVE_SPEED, 16, -16, -16, 16, 1.0); //strafes left from back
+                encoderDrive(DRIVE_SPEED, -33, -33, -33, -33, 1.0); //move towards the board
+                encoderDrive(DRIVE_SPEED, -16, 16, 16, -16, 1.0); //strafes right from back
+                elbowDrive(DRIVE_SPEED, armMove(25, 1), 1.0); //arm moves back
+                clawL.setPosition(0);
+                elbowDrive(DRIVE_SPEED, armMove(-40, 1), 1.0); //score
                 encoderDrive(DRIVE_SPEED, -25, 25, 25, -25, 1.0); //strafes right from back
                 break;
             case CENTER:
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 1.0); //move forward
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
                 encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //forward to back
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(-70, 1), 1.0); //arm moves forward
-                clawR.setPosition(0);
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
-                clawR.setPosition(0.4); //lets go of purple pixel on the marker
-                elbowDrive(DRIVE_SPEED, armMove(85, 1), 1.0); //arm moves backward
-                clawL.setPosition(0.4);
+                elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves forward
+                clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves backward
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns LEFT towards board
-                clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //TOWARDS board from back
-                clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, -10, 10, 10, -10, 1.0); //strafes right from BACK
-                clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, -27, -27, -27, -27, 1.0); //move towards the board BACKWARDS
-                encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 1.0); //strafes left from BACK
-                clawL.setPosition(0.4);
-                elbowDrive(DRIVE_SPEED, armMove(-25, 1), 1.0); //arm moves back
-                clawL.setPosition(0.4);
-                elbowDrive(DRIVE_SPEED, armMove(40, 1), 1.0); //score
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from BACK
+                elbowDrive(DRIVE_SPEED, armMove(25, 1), 1.0); //arm moves back
+                clawL.setPosition(0);
+                elbowDrive(DRIVE_SPEED, armMove(-40, 1), 1.0); //score
                 encoderDrive(DRIVE_SPEED, -20, 20, 20, -20, 1.0); //strafes right from BACK
                 break;
             case RIGHT:
-                clawL.setPosition(0.4); //rest
-                clawR.setPosition(0); //rest
+                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
-                clawL.setPosition(0.4);
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns LEFT
-                clawL.setPosition(0.4);
-                encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //forward for room for claw
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(-70, 1), 1.0); //arm moves forward
-                clawR.setPosition(0);
-                clawL.setPosition(0.4);
-                clawR.setPosition(0);
-                clawR.setPosition(0.4); //lets go of purple pixel on the marker
-                elbowDrive(DRIVE_SPEED, armMove(85, 1), 1.0); //arm moves forward
-                clawL.setPosition(0.94);
+                encoderDrive(DRIVE_SPEED, 10.5, 10.5, 10.5, 10.5, 1.0); //forward for room for claw
+                elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves forward
+                clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves forward
                 encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //forward to back
-                clawL.setPosition(0.4);
-                encoderDrive(DRIVE_SPEED, -27, -27, -27, -27, 1.0); //move towards the board
-                encoderDrive(DRIVE_SPEED, -5, 5, 5, -5, 1.0); //strafes right from BACK
-                clawL.setPosition(0.4);
-                elbowDrive(DRIVE_SPEED, armMove(-25, 1), 1.0); //score
+                encoderDrive(DRIVE_SPEED, -34, -34, -34, -34, 1.0); //move towards the board
+                encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 1.0); //move towards the board
+                elbowDrive(DRIVE_SPEED, armMove(33, 1), 1.0); //score
                 clawL.setPosition(0);
-                elbowDrive(DRIVE_SPEED, armMove(40, 1), 1.0); //move back
+                elbowDrive(DRIVE_SPEED, armMove(-40, 1), 1.0); //move back
                 encoderDrive(DRIVE_SPEED, -15, 15, 15, -15, 1.0); //strafes right from BACK
                 break;
         }
@@ -314,6 +294,7 @@ public class BlueCloseToBoardVision extends LinearOpMode {
             sleep(250);   // optional pause after each move.
         }
     }
+
     public void elbowDrive(double speed, double elbowInches ,double timeoutS){
         int newelbowtarget;
 
