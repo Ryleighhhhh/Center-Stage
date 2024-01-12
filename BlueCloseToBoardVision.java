@@ -159,13 +159,15 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns right
                 encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //forward for room for claw
                 elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves back
+                sleep(1000);
                 clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                sleep(1000);
                 elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves forward
                 encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //backward to go back
                 encoderDrive(DRIVE_SPEED, 16, -16, -16, 16, 1.0); //strafes left from back
                 encoderDrive(DRIVE_SPEED, -33, -33, -33, -33, 1.0); //move towards the board
                 encoderDrive(DRIVE_SPEED, -16, 16, 16, -16, 1.0); //strafes right from back
-                elbowDrive(DRIVE_SPEED, armMove(25, 1), 1.0); //arm moves back
+                elbowDrive(DRIVE_SPEED, armMove(45, 1), 1.0); //arm moves back
                 clawL.setPosition(0);
                 elbowDrive(DRIVE_SPEED, armMove(-40, 1), 1.0); //score
                 encoderDrive(DRIVE_SPEED, -25, 25, 25, -25, 1.0); //strafes right from back
@@ -175,7 +177,9 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 encoderDrive(DRIVE_SPEED, 18, 18, 18, 18, 1.0); //move forward
                 encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //forward to back
                 elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves forward
+                sleep(1000);
                 clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                sleep(1000);
                 elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves backward
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns LEFT towards board
                 encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //TOWARDS board from back
@@ -193,12 +197,14 @@ public class BlueCloseToBoardVision extends LinearOpMode {
                 encoderDrive(DRIVE_SPEED, arc90, -arc90, arc90, -arc90, 5.0); //turns LEFT
                 encoderDrive(DRIVE_SPEED, 10.5, 10.5, 10.5, 10.5, 1.0); //forward for room for claw
                 elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves forward
+                sleep(1000);
                 clawR.setPosition(0.6); //lets go of purple pixel on the marker
+                sleep(1000);
                 elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves forward
                 encoderDrive(DRIVE_SPEED, -arc180, arc180, -arc180, arc180, 5.0); //forward to back
                 encoderDrive(DRIVE_SPEED, -34, -34, -34, -34, 1.0); //move towards the board
                 encoderDrive(DRIVE_SPEED, -1, -1, -1, -1, 1.0); //move towards the board
-                elbowDrive(DRIVE_SPEED, armMove(33, 1), 1.0); //score
+                elbowDrive(DRIVE_SPEED, armMove(45, 1), 1.0); //score
                 clawL.setPosition(0);
                 elbowDrive(DRIVE_SPEED, armMove(-40, 1), 1.0); //move back
                 encoderDrive(DRIVE_SPEED, -15, 15, 15, -15, 1.0); //strafes right from BACK
