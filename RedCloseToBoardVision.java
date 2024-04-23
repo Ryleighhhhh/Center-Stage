@@ -19,8 +19,6 @@ public class RedCloseToBoardVision extends LinearOpMode {
     private DcMotor fR = null;
     private DcMotor bL = null;
     private DcMotor bR = null;
-    /*private DcMotor VP = null;
-    private DcMotor VP2 = null;*/
     private DcMotor elbow = null;
     private DcMotor elbow2 = null;
     private Servo droneservo = null;
@@ -52,8 +50,6 @@ public class RedCloseToBoardVision extends LinearOpMode {
         fR = hardwareMap.get(DcMotor.class, "fR");
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
-        /*VP = hardwareMap.get(DcMotor.class, "VP"); //left-rev
-        VP2 = hardwareMap.get(DcMotor.class, "VP2"); //right */
         elbow = hardwareMap.get(DcMotor.class, "elbow");
         elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         clawL = hardwareMap.get(Servo.class, "clawL"); //rev

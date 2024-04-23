@@ -29,7 +29,6 @@ public class BlueCloseToBoard extends LinearOpMode {
         int goal = (int) (deg * COUNTS_PER_MOTOR_REV/deg);
         return deg;
     }
-   // double ticksperdegree = 537.7/360;
 
     @Override
     public void runOpMode() throws InterruptedException {

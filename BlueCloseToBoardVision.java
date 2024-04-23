@@ -18,14 +18,13 @@ public class BlueCloseToBoardVision extends LinearOpMode {
     private DcMotor fR = null;
     private DcMotor bL = null;
     private DcMotor bR = null;
-    /*private DcMotor VP = null;
-    private DcMotor VP2 = null;*/
     private DcMotor elbow = null;
     private DcMotor elbow2 = null;
     private Servo droneservo = null;
     private Servo clawL = null;
     private Servo clawR = null;
     private Servo wrist = null;
+    private Servo pixHolder = null;
     OpenCvCamera webcam;
     VisionPipeline pipeline = new VisionPipeline(telemetry);
     private ElapsedTime runtime = new ElapsedTime();
@@ -50,14 +49,13 @@ public class BlueCloseToBoardVision extends LinearOpMode {
         fR = hardwareMap.get(DcMotor.class, "fR");
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
-        /*VP = hardwareMap.get(DcMotor.class, "VP"); //left-rev
-        VP2 = hardwareMap.get(DcMotor.class, "VP2"); //right */
         elbow = hardwareMap.get(DcMotor.class, "elbow");
         elbow2 = hardwareMap.get(DcMotor.class, "elbow");
         clawL = hardwareMap.get(Servo.class, "clawL"); //rev
         clawR = hardwareMap.get(Servo.class, "clawR");
         wrist = hardwareMap.get(Servo.class, "wrist");
         droneservo = hardwareMap.get(Servo.class, "droneservo");
+        pixHolder = hardwareMap.get(Servo.class, "pixHolder");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -154,14 +152,9 @@ public class BlueCloseToBoardVision extends LinearOpMode {
 
         switch (pipeline.getAnalysis()) {
             case LEFT:
-                encoderDrive(DRIVE_SPEED, -2, 2, 2, -2, 1.0); //strafes left from front to avoid hitting
                 encoderDrive(DRIVE_SPEED, 28, 28, 28, 28, 1.0); //forward
                 encoderDrive(DRIVE_SPEED, -arc90, arc90, -arc90, arc90, 5.0); //turns right
                 encoderDrive(DRIVE_SPEED, 10, 10, 10, 10, 1.0); //forward for room for claw
-                elbowDrive(DRIVE_SPEED, armMove(70, 1), 1.0); //arm moves back
-                sleep(1000);
-                clawR.setPosition(0.6); //lets go of purple pixel on the marker
-                sleep(1000);
                 elbowDrive(DRIVE_SPEED, armMove(-85, 1), 1.0); //arm moves forward
                 encoderDrive(DRIVE_SPEED, -10, -10, -10, -10, 1.0); //backward to go back
                 encoderDrive(DRIVE_SPEED, 16, -16, -16, 16, 1.0); //strafes left from back

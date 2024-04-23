@@ -19,8 +19,6 @@ public class RedLongScoreVision extends LinearOpMode {
     private DcMotor fR = null;
     private DcMotor bL = null;
     private DcMotor bR = null;
-    /*private DcMotor VP = null;
-    private DcMotor VP2 = null;*/
     private DcMotor elbow = null;
     private DcMotor elbow2 = null;
     //private Servo droneservo = null;
